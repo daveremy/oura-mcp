@@ -26,8 +26,15 @@ export class OuraClient {
     this.clientSecret = opts.clientSecret;
   }
 
-  /** Create client from environment variables. Throws if required vars are missing. */
+  /** Create client from environment variables. Supports both personal access token and OAuth. */
   static fromEnv(): OuraClient {
+    // Personal access token (simplest — no refresh needed)
+    const pat = process.env.OURA_TOKEN;
+    if (pat) {
+      return new OuraClient({ accessToken: pat, refreshToken: "", clientId: "", clientSecret: "" });
+    }
+
+    // OAuth flow
     const accessToken = process.env.OURA_ACCESS_TOKEN;
     const refreshToken = process.env.OURA_REFRESH_TOKEN;
     const clientId = process.env.OURA_CLIENT_ID;
@@ -35,7 +42,7 @@ export class OuraClient {
 
     if (!accessToken || !refreshToken) {
       throw new Error(
-        "Missing OURA_ACCESS_TOKEN or OURA_REFRESH_TOKEN. Run: oura auth"
+        "Missing OURA_TOKEN (personal access token) or OURA_ACCESS_TOKEN/OURA_REFRESH_TOKEN (OAuth). Run: oura auth"
       );
     }
     if (!clientId || !clientSecret) {

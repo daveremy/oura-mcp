@@ -1,83 +1,101 @@
 # oura-cli
 
-Standalone CLI for the Oura Ring API. Query your sleep, readiness, and activity data from the command line.
+A CLI and MCP server for the [Oura Ring](https://ouraring.com/) API v2. Query sleep, readiness, and activity data from the command line or through Claude Code / any MCP client.
+
+## Features
+
+- **CLI**: Query sleep, readiness, and activity data for any date
+- **MCP Server**: 5 tools for integration with Claude Code and other MCP clients
+- **Auth**: Supports both personal access tokens and OAuth2 with automatic token refresh
+
+## MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `oura_daily_summary` | Sleep score, readiness score, sleep details, and activity for a date |
+| `oura_sleep` | Detailed sleep session data (duration, stages, HR, HRV) |
+| `oura_readiness` | Readiness score and contributors |
+| `oura_activity` | Daily activity data (steps, calories, distance) |
+| `oura_trends` | Multi-day sleep and readiness score trends |
 
 ## Setup
 
-### 1. Create an Oura Application
+### 1. Get an Oura API Token
 
-Go to [https://cloud.ouraring.com/oauth/applications](https://cloud.ouraring.com/oauth/applications) and create a new application:
+**Personal Access Token (simplest):**
+1. Go to the [Oura Developer Portal](https://cloud.ouraring.com/personal-access-tokens)
+2. Create a new personal access token
+3. Set `OURA_TOKEN` in your environment
 
-- **Redirect URI**: `http://localhost:9876/callback`
-- Note your Client ID and Client Secret
+**OAuth2 (for automatic token refresh):**
+1. Create an app at [Oura OAuth Applications](https://cloud.ouraring.com/oauth/applications)
+2. Set redirect URI to `http://localhost:9876/callback`
+3. Set `OURA_CLIENT_ID` and `OURA_CLIENT_SECRET` in your environment
+4. Run `oura auth` to complete the flow
 
-### 2. Configure Environment
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and fill in `OURA_CLIENT_ID` and `OURA_CLIENT_SECRET`.
-
-### 3. Install Dependencies
+### 2. Install
 
 ```bash
+git clone https://github.com/daveremy/oura-cli.git
+cd oura-cli
 npm install
+npm run build
 ```
 
-### 4. Authorize
+### 3. Use as CLI
 
 ```bash
-source .env
-npm run dev -- auth
-```
+export OURA_TOKEN=your_token
 
-This opens your browser for Oura authorization. After approval, tokens are printed to stdout. Add the `OURA_ACCESS_TOKEN` and `OURA_REFRESH_TOKEN` to your `.env`.
-
-## Usage
-
-Source your env file first:
-
-```bash
-source .env
-```
-
-### Commands
-
-```bash
-# Get sleep data (default: today)
-npm run dev -- sleep
-npm run dev -- sleep --date 2026-03-05
-
-# Get readiness score
-npm run dev -- readiness
-
-# Get activity data
-npm run dev -- activity
-
-# Get everything for a day
-npm run dev -- summary --date 2026-03-05
+oura sleep                    # Today's sleep data
+oura sleep --date 2026-03-05  # Specific date
+oura readiness                # Today's readiness
+oura activity                 # Today's activity
+oura summary                  # Everything for today
 ```
 
 All commands output JSON to stdout.
 
-### Build and Install
+### 4. Use as MCP Server
+
+Add to your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "oura": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/path/to/oura-cli/dist/mcp.js"],
+      "env": {
+        "OURA_TOKEN": "your_token"
+      }
+    }
+  }
+}
+```
+
+Or register via CLI:
 
 ```bash
-npm run build
-npm link    # makes `oura` available globally
-oura summary
+claude mcp add oura --scope project -- node /path/to/oura-cli/dist/mcp.js
 ```
 
 ## Environment Variables
 
 | Variable | Required | Description |
 |---|---|---|
-| `OURA_CLIENT_ID` | Yes | OAuth2 client ID from Oura developer portal |
-| `OURA_CLIENT_SECRET` | Yes | OAuth2 client secret |
-| `OURA_ACCESS_TOKEN` | Yes (for data commands) | OAuth2 access token (from `oura auth`) |
-| `OURA_REFRESH_TOKEN` | Yes (for data commands) | OAuth2 refresh token (auto-refreshed on 401) |
+| `OURA_TOKEN` | Option A | Personal access token (simplest) |
+| `OURA_ACCESS_TOKEN` | Option B | OAuth2 access token |
+| `OURA_REFRESH_TOKEN` | Option B | OAuth2 refresh token |
+| `OURA_CLIENT_ID` | Option B | OAuth2 client ID |
+| `OURA_CLIENT_SECRET` | Option B | OAuth2 client secret |
 
-## Future
+## Requirements
 
-- MCP server for exposing Oura data as tools to Claude and other AI assistants
+- Node.js 18+
+- An Oura Ring with API access
+
+## License
+
+MIT

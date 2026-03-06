@@ -4,14 +4,17 @@
   "description": "Standalone Oura Ring CLI and MCP server",
   "type": "module",
   "bin": {
-    "oura": "./dist/cli.js"
+    "oura": "./dist/cli.js",
+    "oura-mcp": "./dist/mcp.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/cli.js dist/mcp.js",
     "dev": "tsx src/cli.ts"
   },
   "dependencies": {
-    "commander": "^13.1.0"
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "commander": "^13.1.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",
