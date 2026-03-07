@@ -1,5 +1,5 @@
 {
-  "name": "oura-cli",
+  "name": "oura-mcp",
   "version": "0.1.0",
   "description": "Standalone Oura Ring CLI and MCP server",
   "type": "module",

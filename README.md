@@ -1,4 +1,4 @@
-# oura-cli
+# oura-mcp
 
 A CLI and MCP server for the [Oura Ring](https://ouraring.com/) API v2. Query sleep, readiness, and activity data from the command line or through Claude Code / any MCP client.
 
@@ -36,8 +36,8 @@ A CLI and MCP server for the [Oura Ring](https://ouraring.com/) API v2. Query sl
 ### 2. Install
 
 ```bash
-git clone https://github.com/daveremy/oura-cli.git
-cd oura-cli
+git clone https://github.com/daveremy/oura-mcp.git
+cd oura-mcp
 npm install
 npm run build
 ```
@@ -66,7 +66,7 @@ Add to your project's `.mcp.json`:
     "oura": {
       "type": "stdio",
       "command": "node",
-      "args": ["/path/to/oura-cli/dist/mcp.js"],
+      "args": ["/path/to/oura-mcp/dist/mcp.js"],
       "env": {
         "OURA_TOKEN": "your_token"
       }
@@ -78,7 +78,7 @@ Add to your project's `.mcp.json`:
 Or register via CLI:
 
 ```bash
-claude mcp add oura --scope project -- node /path/to/oura-cli/dist/mcp.js
+claude mcp add oura --scope project -- node /path/to/oura-mcp/dist/mcp.js
 ```
 
 ## Environment Variables

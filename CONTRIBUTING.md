@@ -5,7 +5,7 @@ Thanks for your interest in contributing!
 ## Getting Started
 
 1. Fork the repo
-2. Clone your fork: `git clone https://github.com/your-username/oura-cli.git`
+2. Clone your fork: `git clone https://github.com/your-username/oura-mcp.git`
 3. Install dependencies: `npm install`
 4. Build: `npm run build`
 

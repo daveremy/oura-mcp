@@ -1,6 +1,6 @@
-# oura-cli
+# oura-mcp
 
-Standalone Oura Ring CLI and (future) MCP server.
+Standalone Oura Ring CLI and MCP server.
 
 ## Architecture
 
@@ -8,6 +8,7 @@ Standalone Oura Ring CLI and (future) MCP server.
 - `src/client.ts` — `OuraClient` class wrapping the Oura REST API with automatic token refresh
 - `src/auth.ts` — OAuth2 authorization flow (browser + local callback server on port 9876)
 - `src/cli.ts` — CLI entry point using commander
+- `src/mcp.ts` — MCP server entry point
 
 ## Auth
 
@@ -35,7 +36,3 @@ All data commands output JSON to stdout. Default date is today.
 - `npm run dev -- sleep` — run via tsx (no build needed)
 - `npm run build` — compile TypeScript to dist/
 - Requires: OURA_CLIENT_ID, OURA_CLIENT_SECRET, OURA_ACCESS_TOKEN, OURA_REFRESH_TOKEN
-
-## Future
-
-- MCP server exposing Oura data as tools for Claude
