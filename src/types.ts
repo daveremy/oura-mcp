@@ -63,6 +63,56 @@ export interface OuraApiResponse<T> {
   next_token?: string;
 }
 
+export interface OuraWorkout {
+  day: string;
+  activity: string;
+  calories: number | null;
+  distance: number | null;
+  end_datetime: string;
+  intensity: "easy" | "moderate" | "hard" | string;
+  label: string | null;
+  source: string | null;
+  start_datetime: string;
+  average_heart_rate: number | null;
+  max_heart_rate: number | null;
+}
+
+export interface OuraHeartRate {
+  bpm: number;
+  source: "awake" | "rest" | "sleep" | "session" | "live" | string;
+  timestamp: string;
+}
+
+export interface OuraDailyStress {
+  day: string;
+  stress_high: number | null;
+  recovery_high: number | null;
+  day_summary: "restored" | "normal" | "stressful" | string | null;
+}
+
+export interface OuraDailySpO2 {
+  day: string;
+  spo2_percentage: {
+    average: number | null;
+  };
+}
+
+export interface OuraSession {
+  day: string;
+  start_datetime: string;
+  end_datetime: string;
+  type: "breathing" | "meditation" | "nap" | "relaxation" | "rest" | "body_status" | string;
+  heart_rate: {
+    interval: number;
+    items: number[];
+  } | null;
+  hrv: {
+    interval: number;
+    items: number[];
+  } | null;
+  mood: "bad" | "worse" | "same" | "good" | "great" | string | null;
+}
+
 export interface OuraTokens {
   access_token: string;
   refresh_token: string;

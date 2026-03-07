@@ -2,6 +2,7 @@
 import { Command } from "commander";
 import { OuraClient } from "./client.js";
 import { runAuthFlow } from "./auth.js";
+import { today } from "./utils.js";
 
 const program = new Command();
 
@@ -9,10 +10,6 @@ program
   .name("oura")
   .description("Oura Ring CLI — query sleep, readiness, and activity data")
   .version("0.1.0");
-
-function today(): string {
-  return new Date().toISOString().split("T")[0];
-}
 
 program
   .command("auth")
@@ -69,4 +66,55 @@ program
     console.log(JSON.stringify({ date: opts.date, sleep, readiness, sleepPeriods, activity }, null, 2));
   });
 
-program.parse();
+program
+  .command("workouts")
+  .description("Get auto-detected workouts")
+  .option("--date <date>", "Date in YYYY-MM-DD format", today())
+  .action(async (opts) => {
+    const client = OuraClient.fromEnv();
+    const workouts = await client.getWorkouts(opts.date);
+    console.log(JSON.stringify(workouts, null, 2));
+  });
+
+program
+  .command("heart-rate")
+  .description("Get continuous heart rate data")
+  .requiredOption("--start <datetime>", "Start datetime in ISO 8601 format")
+  .requiredOption("--end <datetime>", "End datetime in ISO 8601 format")
+  .action(async (opts) => {
+    const client = OuraClient.fromEnv();
+    const hr = await client.getHeartRate(opts.start, opts.end);
+    console.log(JSON.stringify(hr, null, 2));
+  });
+
+program
+  .command("stress")
+  .description("Get daily stress levels")
+  .option("--date <date>", "Date in YYYY-MM-DD format", today())
+  .action(async (opts) => {
+    const client = OuraClient.fromEnv();
+    const stress = await client.getDailyStress(opts.date);
+    console.log(JSON.stringify(stress, null, 2));
+  });
+
+program
+  .command("spo2")
+  .description("Get daily blood oxygen (SpO2)")
+  .option("--date <date>", "Date in YYYY-MM-DD format", today())
+  .action(async (opts) => {
+    const client = OuraClient.fromEnv();
+    const spo2 = await client.getDailySpO2(opts.date);
+    console.log(JSON.stringify(spo2, null, 2));
+  });
+
+program
+  .command("sessions")
+  .description("Get meditation/breathing sessions")
+  .option("--date <date>", "Date in YYYY-MM-DD format", today())
+  .action(async (opts) => {
+    const client = OuraClient.fromEnv();
+    const sessions = await client.getSessions(opts.date);
+    console.log(JSON.stringify(sessions, null, 2));
+  });
+
+program.parseAsync();
