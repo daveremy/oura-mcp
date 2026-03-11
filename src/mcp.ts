@@ -7,6 +7,7 @@ import { formatLocalDate, today } from "./utils.js";
 import { VERSION } from "./version.js";
 
 const server = new McpServer({ name: "oura", version: VERSION });
+const client = OuraClient.fromEnv();
 
 function text(data: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
@@ -20,7 +21,7 @@ server.registerTool("oura_daily_summary", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   const [sleep, readiness, periods, activity] = await Promise.all([
     client.getDailySleep(d),
     client.getDailyReadiness(d),
@@ -36,7 +37,7 @@ server.registerTool("oura_sleep", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   const [daily, periods] = await Promise.all([
     client.getDailySleep(d),
     client.getSleepPeriods(d),
@@ -50,7 +51,7 @@ server.registerTool("oura_readiness", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getDailyReadiness(d));
 });
 
@@ -60,7 +61,7 @@ server.registerTool("oura_activity", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getDailyActivity(d));
 });
 
@@ -70,7 +71,7 @@ server.registerTool("oura_workouts", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getWorkouts(d));
 });
 
@@ -82,7 +83,7 @@ server.registerTool("oura_heart_rate", {
     end_datetime: z.string().describe("End datetime in ISO 8601 format (e.g. 2024-01-01T23:59:59+00:00)"),
   }),
 }, async ({ start_datetime, end_datetime }) => {
-  const client = OuraClient.fromEnv();
+
   return text(await client.getHeartRate(start_datetime, end_datetime));
 });
 
@@ -92,7 +93,7 @@ server.registerTool("oura_stress", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getDailyStress(d));
 });
 
@@ -102,7 +103,7 @@ server.registerTool("oura_spo2", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getDailySpO2(d));
 });
 
@@ -112,7 +113,7 @@ server.registerTool("oura_sessions", {
   inputSchema: z.object({ date: optDate }),
 }, async ({ date }) => {
   const d = date ?? today();
-  const client = OuraClient.fromEnv();
+
   return text(await client.getSessions(d));
 });
 
@@ -124,7 +125,7 @@ server.registerTool("oura_trends", {
   }),
 }, async ({ days }) => {
   const n = days ?? 7;
-  const client = OuraClient.fromEnv();
+
 
   const now = new Date();
   const endDate = formatLocalDate(now);

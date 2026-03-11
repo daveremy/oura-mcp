@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { randomBytes } from "node:crypto";
 import { execSync } from "node:child_process";
 import { URL } from "node:url";
 import type { OuraTokens } from "./types.js";
@@ -17,11 +18,14 @@ export async function runAuthFlow(): Promise<void> {
     process.exit(1);
   }
 
+  const state = randomBytes(16).toString("hex");
+
   const authUrl =
     `https://cloud.ouraring.com/oauth/authorize?response_type=code` +
     `&client_id=${clientId}` +
     `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-    `&scope=${encodeURIComponent(SCOPES)}`;
+    `&scope=${encodeURIComponent(SCOPES)}` +
+    `&state=${state}`;
 
   console.log("Opening browser for Oura authorization...");
   console.log(`If it doesn't open, go to:\n${authUrl}\n`);
@@ -33,6 +37,8 @@ export async function runAuthFlow(): Promise<void> {
   }
 
   return new Promise((resolve) => {
+    let timeout: NodeJS.Timeout;
+
     const server = createServer(async (req, res) => {
       const url = new URL(req.url!, `http://localhost:${PORT}`);
 
@@ -44,6 +50,15 @@ export async function runAuthFlow(): Promise<void> {
 
       const code = url.searchParams.get("code");
       const error = url.searchParams.get("error");
+      const returnedState = url.searchParams.get("state");
+
+      if (returnedState !== state) {
+        res.writeHead(403);
+        res.end("Invalid state parameter — possible CSRF attack.");
+        return;
+      }
+
+      clearTimeout(timeout);
 
       if (error) {
         res.writeHead(400);
@@ -105,10 +120,11 @@ export async function runAuthFlow(): Promise<void> {
     });
 
     // Timeout after 2 minutes
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       console.error("Timed out waiting for authorization callback.");
       server.close();
       process.exit(1);
     }, 120_000);
+    timeout.unref();
   });
 }
