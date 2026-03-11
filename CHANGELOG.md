@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-03-11
+
 ### Added
 - Companion `/oura` skill for conversational health data queries
 
@@ -42,7 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Skip useless OAuth refresh when using personal access tokens
 - npm publish metadata (`files`, `prepublishOnly`, `keywords`, `repository`)
 
-[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.2...HEAD
-[0.1.2]: https://github.com/daveremy/oura-mcp/compare/v0.1.1...v0.1.2
+[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/daveremy/oura-mcp/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/daveremy/oura-mcp/releases/tag/v0.1.2
 [0.1.1]: https://github.com/daveremy/oura-mcp/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/daveremy/oura-mcp/releases/tag/v0.1.0
