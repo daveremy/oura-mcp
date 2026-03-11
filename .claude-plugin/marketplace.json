@@ -5,6 +5,6 @@
     "name": "oura-mcp",
     "source": { "source": "npm", "package": "oura-mcp" },
     "description": "Oura Ring MCP server — sleep, readiness, activity, HR, stress, SpO2, workouts, and sessions",
-    "version": "0.1.0"
+    "version": "0.1.1"
   }]
 }

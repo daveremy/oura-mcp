@@ -1,13 +1,21 @@
 {
   "name": "oura-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Oura Ring MCP server and CLI — sleep, readiness, activity, HR, stress, SpO2, workouts, and more",
   "type": "module",
   "license": "MIT",
-  "keywords": ["oura", "mcp", "model-context-protocol", "oura-ring", "health", "sleep", "cli"],
+  "keywords": [
+    "oura",
+    "mcp",
+    "model-context-protocol",
+    "oura-ring",
+    "health",
+    "sleep",
+    "cli"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/daveremy/oura-mcp"
+    "url": "git+https://github.com/daveremy/oura-mcp.git"
   },
   "bin": {
     "oura": "./dist/cli.js",
