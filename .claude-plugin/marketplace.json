@@ -3,7 +3,7 @@
   "owner": { "name": "daveremy" },
   "plugins": [{
     "name": "oura-mcp",
-    "source": { "source": "npm", "package": "oura-mcp" },
+    "source": { "source": "npm", "package": "@daveremy/oura-mcp" },
     "description": "Oura Ring MCP server — sleep, readiness, activity, HR, stress, SpO2, workouts, and sessions",
     "version": "0.1.1"
   }]

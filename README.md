@@ -48,7 +48,7 @@ No install needed — use `npx` to run directly:
     "oura": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "oura-mcp"],
+      "args": ["-y", "@daveremy/oura-mcp"],
       "env": {
         "OURA_TOKEN": "your_token"
       }
@@ -60,13 +60,13 @@ No install needed — use `npx` to run directly:
 Or register via CLI:
 
 ```bash
-claude mcp add oura -- npx -y oura-mcp
+claude mcp add oura -- npx -y @daveremy/oura-mcp
 ```
 
 ### 3. Use as CLI
 
 ```bash
-npm install -g oura-mcp
+npm install -g @daveremy/oura-mcp
 export OURA_TOKEN=your_token
 
 oura sleep                    # Today's sleep data

@@ -8,7 +8,7 @@
   "mcpServers": {
     "oura": {
       "command": "npx",
-      "args": ["-y", "oura-mcp"]
+      "args": ["-y", "@daveremy/oura-mcp"]
     }
   }
 }

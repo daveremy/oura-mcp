@@ -1,5 +1,5 @@
 {
-  "name": "oura-mcp",
+  "name": "@daveremy/oura-mcp",
   "version": "0.1.1",
   "description": "Oura Ring MCP server and CLI — sleep, readiness, activity, HR, stress, SpO2, workouts, and more",
   "type": "module",
