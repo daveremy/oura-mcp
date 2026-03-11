@@ -23,7 +23,8 @@
   },
   "files": [
     "dist",
-    ".claude-plugin"
+    ".claude-plugin",
+    "skills"
   ],
   "scripts": {
     "build": "tsc && chmod +x dist/cli.js dist/mcp.js",

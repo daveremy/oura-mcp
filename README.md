@@ -111,6 +111,27 @@ npm run build
 | `OURA_CLIENT_ID` | Option B | OAuth2 client ID |
 | `OURA_CLIENT_SECRET` | Option B | OAuth2 client secret |
 
+## Skills
+
+This plugin bundles a `/oura` skill for conversational health data queries:
+
+```
+/oura              # Today's health briefing
+/oura sleep        # Detailed sleep data
+/oura readiness    # Readiness score and contributors
+/oura activity     # Steps, calories, distance
+/oura workouts     # Auto-detected workouts
+/oura hr <start> <end>  # Heart rate for a time window
+/oura stress       # Stress and recovery levels
+/oura spo2         # Blood oxygen
+/oura sessions     # Meditation/breathing sessions
+/oura trends       # 7-day sleep + readiness trends
+/oura trends 14    # 14-day trends
+/oura summary      # Full daily summary (same as default)
+```
+
+The skill orchestrates the MCP tools into conversational, insight-driven responses instead of raw JSON.
+
 ## Requirements
 
 - Node.js 18+

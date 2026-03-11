@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Companion `/oura` skill for conversational health data queries
+
 ## [0.1.2] - 2026-03-11
 
 ### Added
