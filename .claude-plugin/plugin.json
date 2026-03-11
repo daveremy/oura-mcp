@@ -1,0 +1,14 @@
+{
+  "name": "oura-mcp",
+  "description": "Oura Ring MCP server — sleep, readiness, activity, HR, stress, SpO2, workouts, and sessions",
+  "version": "0.1.0",
+  "author": { "name": "daveremy" },
+  "homepage": "https://github.com/daveremy/oura-mcp",
+  "repository": "https://github.com/daveremy/oura-mcp",
+  "mcpServers": {
+    "oura": {
+      "command": "npx",
+      "args": ["-y", "oura-mcp"]
+    }
+  }
+}

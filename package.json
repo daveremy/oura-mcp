@@ -14,7 +14,8 @@
     "oura-mcp": "./dist/mcp.js"
   },
   "files": [
-    "dist"
+    "dist",
+    ".claude-plugin"
   ],
   "scripts": {
     "build": "tsc && chmod +x dist/cli.js dist/mcp.js",

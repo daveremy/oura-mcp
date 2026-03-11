@@ -3,13 +3,14 @@ import { Command } from "commander";
 import { OuraClient } from "./client.js";
 import { runAuthFlow } from "./auth.js";
 import { today } from "./utils.js";
+import { VERSION } from "./version.js";
 
 const program = new Command();
 
 program
   .name("oura")
   .description("Oura Ring CLI — query sleep, readiness, and activity data")
-  .version("0.1.0");
+  .version(VERSION);
 
 program
   .command("auth")
