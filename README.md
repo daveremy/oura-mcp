@@ -23,6 +23,15 @@ A CLI and MCP server for the [Oura Ring](https://ouraring.com/) API v2. Query sl
 | `oura_sessions` | Meditation, breathing, and relaxation sessions |
 | `oura_trends` | Multi-day sleep and readiness score trends |
 
+## Install as Claude Code Plugin
+
+```bash
+claude plugin marketplace add daveremy/oura-mcp
+claude plugin install oura-mcp@oura-mcp-plugins
+```
+
+Then set your Oura token in the plugin's env (see Auth below).
+
 ## Setup
 
 ### 1. Get an Oura API Token
