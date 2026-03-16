@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-03-16
+
 ### Added
 - Persistent token storage at `~/.oura-mcp/config.json` — plugin works without direnv
 - `oura config set-token`, `oura config show`, `oura config clear` CLI commands
+
+### Fixed
+- Auth precedence: env OAuth vars now correctly override stored PAT
 
 ## [0.1.3] - 2026-03-11
 
@@ -48,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Skip useless OAuth refresh when using personal access tokens
 - npm publish metadata (`files`, `prepublishOnly`, `keywords`, `repository`)
 
-[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/daveremy/oura-mcp/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/daveremy/oura-mcp/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/daveremy/oura-mcp/releases/tag/v0.1.2
 [0.1.1]: https://github.com/daveremy/oura-mcp/compare/v0.1.0...v0.1.1
