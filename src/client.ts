@@ -11,6 +11,7 @@ import type {
   OuraTokens,
   OuraWorkout,
 } from "./types.js";
+import { loadConfig } from "./config.js";
 
 export class OuraClient {
   private accessToken: string;
@@ -32,32 +33,32 @@ export class OuraClient {
     this.clientSecret = opts.clientSecret;
   }
 
-  /** Create client from environment variables. Supports both personal access token and OAuth. */
+  /** Create client from environment variables, falling back to ~/.oura-mcp/config.json. */
   static fromEnv(): OuraClient {
-    // Personal access token (simplest — no refresh needed)
-    const pat = process.env.OURA_TOKEN;
+    const config = loadConfig();
+
+    // Environment OAuth vars take highest priority (explicit override)
+    const envAccessToken = process.env.OURA_ACCESS_TOKEN;
+    const envRefreshToken = process.env.OURA_REFRESH_TOKEN;
+    if (envAccessToken && envRefreshToken) {
+      const clientId = process.env.OURA_CLIENT_ID ?? config.clientId;
+      const clientSecret = process.env.OURA_CLIENT_SECRET ?? config.clientSecret;
+      if (!clientId || !clientSecret) {
+        throw new Error("Missing OURA_CLIENT_ID or OURA_CLIENT_SECRET in environment.");
+      }
+      return new OuraClient({ accessToken: envAccessToken, refreshToken: envRefreshToken, clientId, clientSecret });
+    }
+
+    // Personal access token: env, then config file
+    const pat = process.env.OURA_TOKEN ?? config.token;
     if (pat) {
       return new OuraClient({ accessToken: pat, refreshToken: "", clientId: "", clientSecret: "" });
     }
 
-    // OAuth flow
-    const accessToken = process.env.OURA_ACCESS_TOKEN;
-    const refreshToken = process.env.OURA_REFRESH_TOKEN;
-    const clientId = process.env.OURA_CLIENT_ID;
-    const clientSecret = process.env.OURA_CLIENT_SECRET;
-
-    if (!accessToken || !refreshToken) {
-      throw new Error(
-        "Missing OURA_TOKEN (personal access token) or OURA_ACCESS_TOKEN/OURA_REFRESH_TOKEN (OAuth). Run: oura auth"
-      );
-    }
-    if (!clientId || !clientSecret) {
-      throw new Error(
-        "Missing OURA_CLIENT_ID or OURA_CLIENT_SECRET in environment."
-      );
-    }
-
-    return new OuraClient({ accessToken, refreshToken, clientId, clientSecret });
+    throw new Error(
+      "Missing OURA_TOKEN (personal access token) or OURA_ACCESS_TOKEN/OURA_REFRESH_TOKEN (OAuth).\n" +
+      "Set via environment variable or run: oura config set-token <token>"
+    );
   }
 
   private async request<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {

@@ -12,7 +12,7 @@ Query and present Oura Ring health data in a conversational, insight-driven form
 ## First-Time Setup
 
 If any tool call returns an auth error:
-1. Tell the user: "Oura isn't connected yet. Set `OURA_TOKEN` in your MCP server config with a personal access token from https://cloud.ouraring.com/personal-access-tokens"
+1. Tell the user: "Oura isn't connected yet. Run `npx @daveremy/oura-mcp config set-token YOUR_TOKEN` with a personal access token from https://cloud.ouraring.com/personal-access-tokens"
 2. Do not retry until the user confirms they've set it up.
 
 ## When to Use

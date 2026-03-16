@@ -39,7 +39,9 @@ Then set your Oura token in the plugin's env (see Auth below).
 **Personal Access Token (simplest):**
 1. Go to the [Oura Developer Portal](https://cloud.ouraring.com/personal-access-tokens)
 2. Create a new personal access token
-3. Set `OURA_TOKEN` in your environment
+3. Save it: `npx @daveremy/oura-mcp config set-token YOUR_TOKEN`
+
+The token is stored at `~/.oura-mcp/config.json` and works everywhere — CLI, MCP server, and Claude Code plugin. You can also set `OURA_TOKEN` as an environment variable (takes precedence over stored config).
 
 **OAuth2 (for automatic token refresh):**
 1. Create an app at [Oura OAuth Applications](https://cloud.ouraring.com/oauth/applications)

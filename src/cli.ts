@@ -2,6 +2,7 @@
 import { Command } from "commander";
 import { OuraClient } from "./client.js";
 import { runAuthFlow } from "./auth.js";
+import { loadConfig, saveConfig, getConfigPath } from "./config.js";
 import { today } from "./utils.js";
 import { VERSION } from "./version.js";
 
@@ -17,6 +18,44 @@ program
   .description("Run OAuth2 authorization flow")
   .action(async () => {
     await runAuthFlow();
+  });
+
+const configCmd = program
+  .command("config")
+  .description("Manage stored credentials (~/.oura-mcp/config.json)");
+
+configCmd
+  .command("set-token <token>")
+  .description("Save a personal access token")
+  .action((token: string) => {
+    const config = loadConfig();
+    config.token = token;
+    saveConfig(config);
+    console.log(`Token saved to ${getConfigPath()}`);
+  });
+
+configCmd
+  .command("show")
+  .description("Show current config (tokens are masked)")
+  .action(() => {
+    const config = loadConfig();
+    const mask = (v: string | undefined) => v ? v.slice(0, 4) + "..." + v.slice(-4) : "(not set)";
+    console.log(JSON.stringify({
+      token: mask(config.token),
+      accessToken: mask(config.accessToken),
+      refreshToken: mask(config.refreshToken),
+      clientId: mask(config.clientId),
+      clientSecret: mask(config.clientSecret),
+      path: getConfigPath(),
+    }, null, 2));
+  });
+
+configCmd
+  .command("clear")
+  .description("Remove stored credentials")
+  .action(() => {
+    saveConfig({});
+    console.log("Config cleared.");
   });
 
 program

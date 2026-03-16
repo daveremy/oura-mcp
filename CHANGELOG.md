@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Persistent token storage at `~/.oura-mcp/config.json` — plugin works without direnv
+- `oura config set-token`, `oura config show`, `oura config clear` CLI commands
+
 ## [0.1.3] - 2026-03-11
 
 ### Added

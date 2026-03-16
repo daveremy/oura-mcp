@@ -7,6 +7,7 @@ Standalone Oura Ring CLI and MCP server.
 - `src/types.ts` — TypeScript types matching Oura API v2 responses
 - `src/client.ts` — `OuraClient` class wrapping the Oura REST API with automatic token refresh
 - `src/auth.ts` — OAuth2 authorization flow (browser + local callback server on port 9876)
+- `src/config.ts` — Persistent token storage at `~/.oura-mcp/config.json`
 - `src/cli.ts` — CLI entry point using commander
 - `src/mcp.ts` — MCP server entry point
 
@@ -24,6 +25,9 @@ The client auto-refreshes expired tokens on 401 responses and prints new tokens 
 ## CLI Commands
 
 - `oura auth` — run OAuth flow
+- `oura config set-token <token>` — save personal access token to ~/.oura-mcp/config.json
+- `oura config show` — show stored config (masked)
+- `oura config clear` — remove stored credentials
 - `oura sleep [--date YYYY-MM-DD]` — daily sleep score + sleep periods
 - `oura readiness [--date YYYY-MM-DD]` — daily readiness score
 - `oura activity [--date YYYY-MM-DD]` — daily activity data
@@ -35,4 +39,5 @@ All data commands output JSON to stdout. Default date is today.
 
 - `npm run dev -- sleep` — run via tsx (no build needed)
 - `npm run build` — compile TypeScript to dist/
-- Requires: OURA_CLIENT_ID, OURA_CLIENT_SECRET, OURA_ACCESS_TOKEN, OURA_REFRESH_TOKEN
+- Requires: OURA_TOKEN (or run `oura config set-token`) for personal access token
+- OAuth requires: OURA_CLIENT_ID, OURA_CLIENT_SECRET, OURA_ACCESS_TOKEN, OURA_REFRESH_TOKEN
