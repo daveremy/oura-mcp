@@ -157,4 +157,7 @@ program
     console.log(JSON.stringify(sessions, null, 2));
   });
 
-program.parseAsync();
+program.parseAsync().catch((err) => {
+  console.error(err instanceof Error ? err.message : err);
+  process.exit(1);
+});

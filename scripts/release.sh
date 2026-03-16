@@ -31,10 +31,15 @@ NEW_VERSION=$(node -p "require('./package.json').version")
 
 echo "Bumping $OLD_VERSION -> $NEW_VERSION"
 
-# Update version in all locations
+# Update version in all locations — verify each substitution happened
 sed -i '' "s/export const VERSION = \"$OLD_VERSION\"/export const VERSION = \"$NEW_VERSION\"/" src/version.ts
+grep -q "VERSION = \"$NEW_VERSION\"" src/version.ts || { echo "Failed to update src/version.ts"; exit 1; }
+
 sed -i '' "s/\"version\": \"$OLD_VERSION\"/\"version\": \"$NEW_VERSION\"/g" .claude-plugin/plugin.json
+grep -q "\"version\": \"$NEW_VERSION\"" .claude-plugin/plugin.json || { echo "Failed to update plugin.json"; exit 1; }
+
 sed -i '' "s/\"version\": \"$OLD_VERSION\"/\"version\": \"$NEW_VERSION\"/g" .claude-plugin/marketplace.json
+grep -q "\"version\": \"$NEW_VERSION\"" .claude-plugin/marketplace.json || { echo "Failed to update marketplace.json"; exit 1; }
 
 # Update CHANGELOG: rename [Unreleased] to new version with today's date
 TODAY=$(date +%Y-%m-%d)
@@ -62,7 +67,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Commit, tag, push
-git add package.json src/version.ts .claude-plugin/plugin.json .claude-plugin/marketplace.json CHANGELOG.md
+git add package.json package-lock.json src/version.ts .claude-plugin/plugin.json .claude-plugin/marketplace.json CHANGELOG.md
 git commit -m "Release v$NEW_VERSION"
 git tag "v$NEW_VERSION"
 git push origin main --tags

@@ -4,6 +4,9 @@
   "description": "Oura Ring MCP server and CLI — sleep, readiness, activity, HR, stress, SpO2, workouts, and more",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "keywords": [
     "oura",
     "mcp",

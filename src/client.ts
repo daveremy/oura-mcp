@@ -69,12 +69,14 @@ export class OuraClient {
 
     let res = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${this.accessToken}` },
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (res.status === 401 && this.refreshToken) {
       await this.serializedRefresh();
       res = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${this.accessToken}` },
+        signal: AbortSignal.timeout(30_000),
       });
     }
 
@@ -105,6 +107,7 @@ export class OuraClient {
         client_id: this.clientId,
         client_secret: this.clientSecret,
       }),
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!res.ok) {

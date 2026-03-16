@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 
@@ -18,10 +18,12 @@ export function getConfigPath(): string {
 }
 
 export function loadConfig(): OuraConfig {
+  if (!existsSync(CONFIG_FILE)) return {};
   try {
     const raw = readFileSync(CONFIG_FILE, "utf-8");
     return JSON.parse(raw) as OuraConfig;
-  } catch {
+  } catch (err) {
+    console.error(`Warning: could not parse ${CONFIG_FILE} — ${err instanceof Error ? err.message : err}`);
     return {};
   }
 }

@@ -90,6 +90,9 @@ oura spo2                     # Today's blood oxygen
 oura sessions                 # Today's meditation/breathing sessions
 oura heart-rate --start 2026-03-05T08:00:00 --end 2026-03-05T09:00:00
 oura summary                  # Everything for today
+oura config set-token <tok>   # Save token to ~/.oura-mcp/config.json
+oura config show              # Show stored config (masked)
+oura config clear             # Remove stored credentials
 ```
 
 All commands output JSON to stdout.
