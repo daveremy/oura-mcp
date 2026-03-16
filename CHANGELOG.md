@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-03-16
+
+### Fixed
+- 30s timeout on all API and token refresh requests (prevents hangs)
+- CLI shows clean error messages instead of stack traces
+- Config file warns on corruption instead of silently returning empty
+- Auth server stays alive after bad state parameter (doesn't break flow)
+- Release script verifies version substitutions and includes package-lock.json
+- Stale package-lock.json metadata (wrong name/version)
+
+### Added
+- `engines` field in package.json enforcing Node.js >= 18
+- `oura config` commands documented in README CLI section
+
 ## [0.1.4] - 2026-03-16
 
 ### Added
@@ -53,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Skip useless OAuth refresh when using personal access tokens
 - npm publish metadata (`files`, `prepublishOnly`, `keywords`, `repository`)
 
-[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/daveremy/oura-mcp/compare/v0.1.5...HEAD
+[0.1.5]: https://github.com/daveremy/oura-mcp/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/daveremy/oura-mcp/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/daveremy/oura-mcp/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/daveremy/oura-mcp/releases/tag/v0.1.2
