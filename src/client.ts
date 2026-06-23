@@ -13,6 +13,19 @@ import type {
 } from "./types.js";
 import { loadConfig } from "./config.js";
 
+/**
+ * Oura's timestamp-keyed collections (daily_activity, sleep, workout, session)
+ * treat `end_date` as EXCLUSIVE, so a `start_date === end_date` window returns
+ * nothing. Return the day after `date` for use as the exclusive upper bound.
+ * Day-keyed collections (daily_sleep/readiness/stress/spo2) are inclusive and
+ * keep using `end_date === date`.
+ */
+function nextDay(date: string): string {
+  const d = new Date(`${date}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 export class OuraClient {
   private accessToken: string;
   private refreshToken: string;
@@ -156,7 +169,7 @@ export class OuraClient {
   async getSleepPeriods(date: string): Promise<OuraSleepPeriod[]> {
     const res = await this.request<OuraApiResponse<OuraSleepPeriod>>(
       "v2/usercollection/sleep",
-      { start_date: date, end_date: date }
+      { start_date: date, end_date: nextDay(date) }
     );
     return res.data;
   }
@@ -164,7 +177,7 @@ export class OuraClient {
   async getDailyActivity(date: string): Promise<OuraDailyActivity | null> {
     const res = await this.request<OuraApiResponse<OuraDailyActivity>>(
       "v2/usercollection/daily_activity",
-      { start_date: date, end_date: date }
+      { start_date: date, end_date: nextDay(date) }
     );
     return res.data[0] ?? null;
   }
@@ -172,7 +185,7 @@ export class OuraClient {
   async getWorkouts(date: string): Promise<OuraWorkout[]> {
     const res = await this.request<OuraApiResponse<OuraWorkout>>(
       "v2/usercollection/workout",
-      { start_date: date, end_date: date }
+      { start_date: date, end_date: nextDay(date) }
     );
     return res.data;
   }
@@ -204,7 +217,7 @@ export class OuraClient {
   async getSessions(date: string): Promise<OuraSession[]> {
     const res = await this.request<OuraApiResponse<OuraSession>>(
       "v2/usercollection/session",
-      { start_date: date, end_date: date }
+      { start_date: date, end_date: nextDay(date) }
     );
     return res.data;
   }
