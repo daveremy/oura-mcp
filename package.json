@@ -1,7 +1,7 @@
 {
   "name": "@daveremy/oura-mcp",
-  "version": "0.1.5",
-  "description": "Oura Ring MCP server and CLI — sleep, readiness, activity, HR, stress, SpO2, workouts, and more",
+  "version": "0.1.6",
+  "description": "Oura Ring MCP server and CLI \u2014 sleep, readiness, activity, HR, stress, SpO2, workouts, and more",
   "type": "module",
   "license": "MIT",
   "engines": {

@@ -12,6 +12,7 @@ import type {
   OuraWorkout,
 } from "./types.js";
 import { loadConfig } from "./config.js";
+import { nextDay } from "./utils.js";
 
 export class OuraClient {
   private accessToken: string;
@@ -121,12 +122,48 @@ export class OuraClient {
     console.error("[oura] Token refreshed successfully.");
   }
 
+  /**
+   * Fetch one calendar day from a date-indexed collection.
+   *
+   * WHY THIS EXISTS: several Oura v2 collections treat `end_date` as
+   * **exclusive**, so the natural `start_date == end_date` query silently
+   * returns an empty array even when data exists. Verified against the live
+   * API on 2026-07-29 for a complete day (2026-07-28):
+   *
+   * | endpoint          | start==end | padded +1 day |
+   * |-------------------|-----------:|--------------:|
+   * | `sleep`           |          0 |             2 |
+   * | `workout`         |          0 |             2 |
+   * | `daily_activity`  |          0 |             1 |
+   * | `daily_sleep`     |          1 |             1 |
+   * | `daily_readiness` |          1 |             1 |
+   * | `daily_stress`    |          1 |             1 |
+   * | `daily_spo2`      |          1 |             1 |
+   *
+   * The behaviour is inconsistent *per endpoint* — it is NOT simply
+   * "`daily_*` are fine" — so rather than patching the known-broken three we
+   * request `[date, date+1]` everywhere and filter client-side on `day`.
+   * The filter makes padding a no-op for the already-inclusive endpoints
+   * (identical results), and immunises us against Oura changing any single
+   * endpoint's behaviour later.
+   */
+  private async requestDay<T extends { day?: string }>(
+    endpoint: string,
+    date: string
+  ): Promise<T[]> {
+    const res = await this.request<OuraApiResponse<T>>(endpoint, {
+      start_date: date,
+      end_date: nextDay(date),
+    });
+    return (res.data ?? []).filter((r) => r.day === date);
+  }
+
   async getDailySleep(date: string): Promise<OuraDailySleep | null> {
-    const res = await this.request<OuraApiResponse<OuraDailySleep>>(
+    const data = await this.requestDay<OuraDailySleep>(
       "v2/usercollection/daily_sleep",
-      { start_date: date, end_date: date }
+      date
     );
-    return res.data[0] ?? null;
+    return data[0] ?? null;
   }
 
   async getDailySleepRange(startDate: string, endDate: string): Promise<OuraDailySleep[]> {
@@ -138,11 +175,11 @@ export class OuraClient {
   }
 
   async getDailyReadiness(date: string): Promise<OuraDailyReadiness | null> {
-    const res = await this.request<OuraApiResponse<OuraDailyReadiness>>(
+    const data = await this.requestDay<OuraDailyReadiness>(
       "v2/usercollection/daily_readiness",
-      { start_date: date, end_date: date }
+      date
     );
-    return res.data[0] ?? null;
+    return data[0] ?? null;
   }
 
   async getDailyReadinessRange(startDate: string, endDate: string): Promise<OuraDailyReadiness[]> {
@@ -154,27 +191,19 @@ export class OuraClient {
   }
 
   async getSleepPeriods(date: string): Promise<OuraSleepPeriod[]> {
-    const res = await this.request<OuraApiResponse<OuraSleepPeriod>>(
-      "v2/usercollection/sleep",
-      { start_date: date, end_date: date }
-    );
-    return res.data;
+    return this.requestDay<OuraSleepPeriod>("v2/usercollection/sleep", date);
   }
 
   async getDailyActivity(date: string): Promise<OuraDailyActivity | null> {
-    const res = await this.request<OuraApiResponse<OuraDailyActivity>>(
+    const data = await this.requestDay<OuraDailyActivity>(
       "v2/usercollection/daily_activity",
-      { start_date: date, end_date: date }
+      date
     );
-    return res.data[0] ?? null;
+    return data[0] ?? null;
   }
 
   async getWorkouts(date: string): Promise<OuraWorkout[]> {
-    const res = await this.request<OuraApiResponse<OuraWorkout>>(
-      "v2/usercollection/workout",
-      { start_date: date, end_date: date }
-    );
-    return res.data;
+    return this.requestDay<OuraWorkout>("v2/usercollection/workout", date);
   }
 
   async getHeartRate(startDatetime: string, endDatetime: string): Promise<OuraHeartRate[]> {
@@ -186,26 +215,22 @@ export class OuraClient {
   }
 
   async getDailyStress(date: string): Promise<OuraDailyStress | null> {
-    const res = await this.request<OuraApiResponse<OuraDailyStress>>(
+    const data = await this.requestDay<OuraDailyStress>(
       "v2/usercollection/daily_stress",
-      { start_date: date, end_date: date }
+      date
     );
-    return res.data[0] ?? null;
+    return data[0] ?? null;
   }
 
   async getDailySpO2(date: string): Promise<OuraDailySpO2 | null> {
-    const res = await this.request<OuraApiResponse<OuraDailySpO2>>(
+    const data = await this.requestDay<OuraDailySpO2>(
       "v2/usercollection/daily_spo2",
-      { start_date: date, end_date: date }
+      date
     );
-    return res.data[0] ?? null;
+    return data[0] ?? null;
   }
 
   async getSessions(date: string): Promise<OuraSession[]> {
-    const res = await this.request<OuraApiResponse<OuraSession>>(
-      "v2/usercollection/session",
-      { start_date: date, end_date: date }
-    );
-    return res.data;
+    return this.requestDay<OuraSession>("v2/usercollection/session", date);
   }
 }
